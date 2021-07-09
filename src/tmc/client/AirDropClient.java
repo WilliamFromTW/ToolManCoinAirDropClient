@@ -84,7 +84,8 @@ public class AirDropClient implements ActionListener, ItemListener {
 		String s = source.getLabel();
 		if (s.equalsIgnoreCase("Exit")) {
 			_log.info("Exit menu item selected!");
-			// System.exit(0);
+			System.exit(-1);
+			Runtime.getRuntime().halt(0);
 		} else {
 			for (int i = 0; i < aMenuVector.size(); i++) {
 				if (s.equals(aMenuVector.get(i).toString()))
