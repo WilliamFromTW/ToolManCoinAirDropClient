@@ -1,0 +1,1 @@
+java -cp .:./FromtwSayHelloClient_1.0.jar com.fromtw.sayhello.SayHelloClient 192.168.1.1 168 william williamAccount
