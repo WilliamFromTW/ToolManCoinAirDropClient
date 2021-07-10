@@ -60,7 +60,7 @@ public class AirDropClient implements ActionListener, ItemListener {
 		menu.add(menuItem);
 
 		iIMAGE = Toolkit.getDefaultToolkit().getImage(ClientGlobal.getProperties(ClientGlobal.PROP_IMAGE));
-		ti = new TrayIcon(iIMAGE, "0", menu);
+		ti = new TrayIcon(iIMAGE, "unpaid airdrop : 0", menu);
 		ti.setImageAutoSize(true);
 
 		try {
@@ -175,8 +175,14 @@ public class AirDropClient implements ActionListener, ItemListener {
 			BufferedReader in = new BufferedReader(from_server);
 			String userInput = null;
 			while ((userInput = in.readLine()) != null) {
+				
 				if (userInput.length() > 0) {
-					ti.displayMessage("AirDrop Info", userInput, TrayIcon.MessageType.INFO);
+					if( userInput.indexOf(ClientGlobal.CMD_UNPAID_COIN)!=-1 ) {
+						ti.setToolTip("unpaid airdrop : "+userInput.substring(ClientGlobal.CMD_UNPAID_COIN.length()));
+					}
+					else {
+					  ti.displayMessage("AirDrop", userInput, TrayIcon.MessageType.INFO);
+					}
 				}
 			}
 		} catch (Exception ee) {
@@ -184,31 +190,4 @@ public class AirDropClient implements ActionListener, ItemListener {
 		}
 	}
 
-	private void getData2() {
-		int bytes_read = 0;
-		StringBuffer aReturnData = new StringBuffer();
-		try {
-
-			while (true) {
-
-				bytes_read = from_server.read();
-				if (bytes_read == -1)
-					break;
-				// System.out.println(bytes_read);
-				if (bytes_read == '\n')
-					;
-				else if ((bytes_read != '\r')) {
-					aReturnData.append((char) bytes_read);
-				} else {
-					if (aReturnData.toString().length() > 0) {
-						ti.displayMessage("Coin Info", aReturnData.toString(), TrayIcon.MessageType.INFO);
-						aReturnData.delete(0, aReturnData.length());
-					}
-				}
-			}
-		} catch (IOException ee) {
-			ee.printStackTrace();
-		}
-
-	}
 }

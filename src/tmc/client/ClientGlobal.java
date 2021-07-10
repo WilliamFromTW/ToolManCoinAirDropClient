@@ -19,7 +19,8 @@ public class ClientGlobal{
   public static final String PROP_WALLET_PUBLIC_KEY="WALLET_PUBLIC_KEY";
   public static final String PROP_AIRDROP_SERVER="AIRDROP_SERVER";
   public static final String PROP_AIRDROP_SERVER_PORT="AIRDROP_SERVER_PORT";
-  
+  public static final String CMD_UNPAID_COIN = "UNPAID_COIN";
+
 
   private static final Logger _log = Logger.getLogger(ClientGlobal.class.getName());
   private static Properties serverSettings = null;

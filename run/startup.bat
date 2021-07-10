@@ -1,1 +1,1 @@
-java -cp .;./ToolManCoinAirDropClient-1.0b1.jar tmc.client.AirDropClient
+java -cp .;./ToolManCoinAirDropClient-1.0b2.jar tmc.client.AirDropClient
