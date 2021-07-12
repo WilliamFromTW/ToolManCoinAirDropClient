@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.*;
 import java.util.logging.*;
 
-public class AirDropClient implements ActionListener, ItemListener {
+public class AirDropClient implements ActionListener, ItemListener  {
 
 	private static final Logger _log = Logger.getLogger(AirDropClient.class.getName());
 	SystemTray tray = SystemTray.getSystemTray();
@@ -21,14 +21,13 @@ public class AirDropClient implements ActionListener, ItemListener {
 	private static Socket server;
 	private static InputStreamReader from_server;
 	private static OutputStreamWriter to_server;
-	private static String sUid;
-	private static String sName;
-	private static int iCurrentMin = 0;
-	private static int iPrevious = 0;
 	private static Vector aMenuVector = new Vector();
 	private static Vector aMenuUrlVector = new Vector();
 	public static String CMD_REG = "REG";
-
+    public static String MENU_EXIT = "Exit";
+    public static String MENU_DISABLE_NOTIFICATION = "Disable Notification";
+    private boolean bDisableNotification = false;
+    
 	int iFormNum = 0;
 
 	// */
@@ -53,14 +52,27 @@ public class AirDropClient implements ActionListener, ItemListener {
 			aMenuUrlVector.add(sMenuItemURL[i]);
 		}
 
+		CheckboxMenuItem checkItem = new CheckboxMenuItem (MENU_DISABLE_NOTIFICATION);
+		checkItem.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                int cb1Id = e.getStateChange();
+                if (cb1Id == ItemEvent.SELECTED){
+        			bDisableNotification = true;     
+                } else {
+                	bDisableNotification = false;
+                }
+    			System.out.println("bDisableNotification="+bDisableNotification);
+            }
+        });
+		menu.add(checkItem);
 		// "Exit" menu item
 		menu.addSeparator();
-		menuItem = new MenuItem("Exit");
+		menuItem = new MenuItem(MENU_EXIT);
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
 
 		iIMAGE = Toolkit.getDefaultToolkit().getImage(ClientGlobal.getProperties(ClientGlobal.PROP_IMAGE));
-		ti = new TrayIcon(iIMAGE, "unpaid airdrop : 0", menu);
+		ti = new TrayIcon(iIMAGE, "unpaid coin : 0", menu);
 		ti.setImageAutoSize(true);
 
 		try {
@@ -79,14 +91,18 @@ public class AirDropClient implements ActionListener, ItemListener {
 		return classString.substring(dotIndex + 1);
 	}
 
+	
 	public void actionPerformed(ActionEvent e) {
 		MenuItem source = (MenuItem) (e.getSource());
 		String s = source.getLabel();
-		if (s.equalsIgnoreCase("Exit")) {
+		//System.out.println("getLabel = "+s+",Action Command = "+ e.getActionCommand());
+		if (s.equalsIgnoreCase(MENU_EXIT)) {
 			_log.info("Exit menu item selected!");
 			System.exit(-1);
 			Runtime.getRuntime().halt(0);
-		} else {
+		} else if(s.equalsIgnoreCase(MENU_DISABLE_NOTIFICATION) ){
+			System.out.println("action command = "+ e.getActionCommand());
+		}else {
 			for (int i = 0; i < aMenuVector.size(); i++) {
 				if (s.equals(aMenuVector.get(i).toString()))
 					try {
@@ -130,7 +146,7 @@ public class AirDropClient implements ActionListener, ItemListener {
 			}
 			try {
 				server = new Socket(HOST.trim(), Integer.parseInt(REMOTE_PORT));
-
+                server.setKeepAlive(true);
 				from_server = new InputStreamReader(server.getInputStream(), ClientGlobal.CONN_ENCODE);
 				to_server = new OutputStreamWriter(server.getOutputStream(), ClientGlobal.CONN_ENCODE);
 
@@ -144,6 +160,7 @@ public class AirDropClient implements ActionListener, ItemListener {
 				} catch (Exception ee) {
 
 				}
+				
 			} catch (Exception ex) {
 				// ti.setToolTip( "disconnected from server" );
 				System.out.println("socket disconnect");
@@ -181,6 +198,7 @@ public class AirDropClient implements ActionListener, ItemListener {
 						ti.setToolTip("unpaid airdrop : "+userInput.substring(ClientGlobal.CMD_UNPAID_COIN.length()));
 					}
 					else {
+						if( !bDisableNotification)
 					  ti.displayMessage("AirDrop", userInput, TrayIcon.MessageType.INFO);
 					}
 				}
