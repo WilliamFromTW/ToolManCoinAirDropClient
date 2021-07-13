@@ -2,7 +2,7 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>S:\vcs\git\inmethod\Java\ToolManCoinAirDropClient\build\libs\ToolManCoinAirDropClient-1.0b3.jar</jar>
+  <jar>S:\vcs\git\inmethod\Java\ToolManCoinAirDropClient\build\libs\ToolManCoinAirDropClient-1.0.jar</jar>
   <outfile>S:\vcs\git\inmethod\Java\ToolManCoinAirDropClient\run\AirDropClient.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
